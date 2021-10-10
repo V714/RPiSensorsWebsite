@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <title>Test 1</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}"/>
+    </head>
+
+    <body>
+        <a href="/" id="log">'/</a>
+        <div class="main">
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>

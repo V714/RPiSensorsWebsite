@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+  
+    <h6>Devices</h6>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Desc</th>
+            <th>Value</th>
+            <th>Active?</th>
+            <th>Date Created</th>
+        </tr>
+        {% for device in devices %}
+            <tr>
+                <td>{{ device.id }}</td>
+                <td>{{ device.name }}</td>
+                <td>{{ device.description }}</td>
+                <td>{{ device.value }}</td>
+                <td>{{ device.active }}</td>
+                <td>{{ device.date_created.date() }}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+{% endblock %}

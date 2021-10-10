@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+ 
+
+    <script>
+        $(document).ready(function() {
+    $(document).on('submit', '#form1', function() {
+        let value=document.getElementById("choosing").value
+            if(value>=0){
+                window.location.href="/scan/"+value;
+            }
+      return false;
+     });
+});
+    </script>
+    <h6>Choose Device</h6>
+    <form id="form1" >
+        <input id="choosing" class="input-field" required="required" min="0" type="number" placeholder="Number of Device"/>
+        <button type="submit" value="Submit" class="input-button">Redirect</button>
+    </form>
+    <div class="add-new-div">
+        <a class="add-new" href="/add">+</a>
+    </div>
+{% endblock %}
