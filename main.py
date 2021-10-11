@@ -25,6 +25,7 @@ class RPiSensor(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
 cors = CORS(app)
+CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 def get_variable():
@@ -106,22 +107,25 @@ def device(id):
     obj['active'] = RPiSensor.query.get_or_404(id).active
     return jsonify(obj)
 
-@app.route('/set/<int:id>', methods=["POST"])
+@app.route('/set/<int:id>', methods=["POST",'GET'])
 def set(id):
-    data = request.get_json()
-    device = RPiSensor.query.get_or_404(id)
-    red_value = data['red']
-    green_value = data['green']
-    blue_value = data['blue']
-    device.values = red_value+','+green_value+','+blue_value
-    diode = RPiRGBDiode(device.pin1,device.pin2,device.pin3)
-    diode.setColor(device.values)
-    del diode
-    try:
-        db.session.commit()
-        return "Correct!"
-    except:
-        return 'Error ID: '+id+' - failure.'
+    if request.method == 'POST':
+        data = request.get_json()
+        device = RPiSensor.query.get_or_404(id)
+        red_value = data['red']
+        green_value = data['green']
+        blue_value = data['blue']
+        device.values = red_value+','+green_value+','+blue_value
+        diode = RPiRGBDiode(device.pin1,device.pin2,device.pin3)
+        diode.setColor(device.values)
+        del diode
+        try:
+            db.session.commit()
+            return "Correct!"
+        except:
+            return 'Error ID: '+id+' - failure.'
+    else:
+        return 'None'
 
 @app.route('/devices', methods=["GET"])
 def devices():

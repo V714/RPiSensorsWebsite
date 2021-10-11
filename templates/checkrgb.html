@@ -29,33 +29,29 @@
             updateColor(red,green,blue)
         }
         
-        function updateColor(red,green,blue){
+        async function updateColor(red,green,blue){
             let this_id = {{id}}
             const data = { red: red.toString(),
                             green: green.toString(),
                             blue: blue.toString() };
 
-            fetch(`http://localhost:5000/set/${this_id}`, {
+            const response = await fetch(`http://192.168.1.130:5000/set/${this_id}`, {
             method: 'POST', // or 'PUT'
-            headers: {
-                'Content-Type': 'application/json',
-            },
+	    headers: {
+		'Accept': 'application/json',
+	    	'Content-Type': 'application/json'
+	    },
             body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(data => {
-            console.log('Success:', data);
-            })
-            .catch((error) => {
-            console.error('Error:', error);
             });
+		const content = await response.json();
+		console.log(content);
         }
 
 
 
     function refresh300(){
         let this_id = {{id}}
-        fetch(`http://localhost:5000/device/${this_id}`)
+        fetch(`http://192.168.1.130:5000/device/${this_id}`)
             .then(function(response){
                 if(!response.ok){
                     document.getElementById('state').innerHTML="NO DEVICE"
