@@ -10,7 +10,9 @@
             <th>ID</th>
             <th>Name</th>
             <th>Desc</th>
-            <th>Value</th>
+            <th>GPIO PIN</th>
+            <th>Type</th>
+            <th>Output?</th>
             <th>Active?</th>
             <th>Date Created</th>
         </tr>
@@ -19,7 +21,9 @@
                 <td>{{ device.id }}</td>
                 <td>{{ device.name }}</td>
                 <td>{{ device.description }}</td>
-                <td>{{ device.value }}</td>
+                <td>{{ device.pin }}</td>
+                <td>{{ device.device_type }}</td>
+                <td>{{ device.output }}</td>
                 <td>{{ device.active }}</td>
                 <td>{{ device.date_created.date() }}</td>
             </tr>

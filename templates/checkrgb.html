@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<script>
+        let red = false
+        let green = false
+        let blue = false
+
+        function changeColor(color){
+            switch(color){
+                case 1:
+                    red = !red;
+                    break;
+                case 2:
+                    green = !green;
+                    break;
+                case 3:
+                    blue = !blue;
+                    break;
+            }
+            
+            if(red){document.getElementById('r_button').classList.add('rred')}
+            else{document.getElementById('r_button').classList.remove('rred')}
+            if(green){document.getElementById('g_button').classList.add('ggreen')}
+            else{document.getElementById('g_button').classList.remove('ggreen')}
+            if(blue){document.getElementById('b_button').classList.add('bblue')}
+            else{document.getElementById('b_button').classList.remove('bblue')}
+            updateColor(red,green,blue)
+        }
+        
+        function updateColor(red,green,blue){
+            let this_id = {{id}}
+            const data = { red: red.toString(),
+                            green: green.toString(),
+                            blue: blue.toString() };
+
+            fetch(`http://localhost:5000/set/${this_id}`, {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+            console.log('Success:', data);
+            })
+            .catch((error) => {
+            console.error('Error:', error);
+            });
+        }
+
+
+
+    function refresh300(){
+        let this_id = {{id}}
+        fetch(`http://localhost:5000/device/${this_id}`)
+            .then(function(response){
+                if(!response.ok){
+                    document.getElementById('state').innerHTML="NO DEVICE"
+                    document.getElementById('state').style.color="#a00"
+                    document.getElementById('title_scan').innerHTML=""
+                    document.getElementById('info').remove();
+                }
+                return response.json()
+            })
+            .then(data => {
+                console.log(data)
+                if(data.active){
+                    let colors = data.values.split(',')
+                    if(colors[0]=='true'){
+                        red=true
+                    }
+                    if(colors[1]=='true'){
+                        green=true
+                    }
+                    if(colors[2]=='true'){
+                        blue=true
+                    }
+
+                    if(red){document.getElementById('r_button').classList.add('rred')}
+                    else{document.getElementById('r_button').classList.remove('rred')}
+                    if(green){document.getElementById('g_button').classList.add('ggreen')}
+                    else{document.getElementById('g_button').classList.remove('ggreen')}
+                    if(blue){document.getElementById('b_button').classList.add('bblue')}
+                    else{document.getElementById('b_button').classList.remove('bblue')}
+                    document.getElementById('name').innerHTML=data.name
+                    document.getElementById('rgb').style.display="flex"
+                }
+                else{
+                document.getElementById('state').innerHTML="DEVICE NOT ACTIVE"
+                document.getElementById('state').style.color="#a00"
+                document.getElementById('title_scan').innerHTML=""
+                document.getElementById('info').remove();
+                document.getElementById('rgb').style.display="none"
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                });
+            
+    }
+    $( document ).ready(function() {
+        refresh300();
+    });
+
+
+
+</script>
+<h6 id="title_scan">Scan</h6>
+<div id="device_name"></div>
+<div id="state">
+    <div id="rgb">
+        <button class="rgb_button" id="r_button" onclick="changeColor(1);">RED</button>    
+        <button class="rgb_button" id="g_button" onclick="changeColor(2);">GREEN</button>    
+        <button class="rgb_button" id="b_button" onclick="changeColor(3);">BLUE</button>    
+    </div>
+</div>
+
+{% endblock %}
