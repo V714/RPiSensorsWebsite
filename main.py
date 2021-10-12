@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from RGBDiode import RPiRGBDiode
+from TempHum import DHT11
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -43,6 +44,8 @@ def check(id):
 
     if obj['device_type'] == 'rgbdiode':
         return render_template("checkrgb.html", id=id)
+    elif obj['device_type'] == 'dht11':
+        return render_template("checkdht11.html", id=id)
     else:
         return render_template("check.html", id=id)
 
@@ -102,9 +105,24 @@ def add():
 @app.route('/device/<int:id>')
 def device(id):
     obj = {}
-    obj['name'] = RPiSensor.query.get_or_404(id).name
-    obj['values'] = RPiSensor.query.get_or_404(id).values
-    obj['active'] = RPiSensor.query.get_or_404(id).active
+    device = RPiSensor.query.get_or_404(id)
+    if device.device_type == 'dht11':
+        
+        dht11 = DHT11(device.pin)
+        temp_val = dht11.temperature()
+        humi_val = dht11.humidity()
+        device.values = str(temp_val)+','+str(humi_val)
+        try:
+            db.session.commit()
+            return "Correct!"
+        except:
+            return 'Error ID: '+id+' - failure.'
+        
+        del dht11
+        
+    obj['name'] = device.name
+    obj['values'] = device.values
+    obj['active'] = device.active
     return jsonify(obj)
 
 @app.route('/set/<int:id>', methods=["POST",'GET'])

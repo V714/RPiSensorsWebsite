@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+<script>
+    let refreshing=false;
+    
+    function change(){
+        if(refreshing){
+            refreshing=false;
+            clearInterval(refresh)
+            document.getElementById('info').innerHTML="Turn On";
+            document.getElementById('info').classList.remove("active");
+        }
+        else{
+            refreshing=true;
+            start_refreshing();
+            document.getElementById('info').innerHTML="Turn Off";
+            document.getElementById('info').classList.add("active");
+        }
+    }
+
+    function start_refreshing(){
+        refresh = window.setInterval(refresh300, 1000);
+    }
+    function refresh300(){
+        let this_id = {{id}}
+        fetch(`http://192.168.1.130:5000/device/${this_id}`)
+            .then(function(response){
+                if(!response.ok){
+                    document.getElementById('state').innerHTML="NO DEVICE"
+                    document.getElementById('state').style.color="#a00"
+                    document.getElementById('title_scan').innerHTML=""
+                    document.getElementById('info').remove();
+                }
+                return response.json()
+            })
+            .then(data => {
+                console.log(data)
+                if(data.active){
+                    let values = data.values.split(',')
+                    document.getElementById('temparature').innerHTML=values[0]
+                    document.getElementById('humidity').innerHTML=values[1]
+                    document.getElementById('name').innerHTML=data.name
+                }
+                else{
+                document.getElementById('state').innerHTML="DEVICE NOT ACTIVE"
+                document.getElementById('state').style.color="#a00"
+                document.getElementById('title_scan').innerHTML=""
+                document.getElementById('info').remove();
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                });
+            
+    }
+
+    refresh300();
+
+
+
+</script>
+<h6 id="title_scan">Scan</h6>
+<button class="info" id="info" onclick="change();">Turn On</button>
+<div id="device_name"></div>
+<div id="state">
+    <div class="dht11value">Temperature: <div id="temperature">???</div></div>
+    <div class="dht11value">Humidity: <div id="humidity">???</div></div>
+
+</div>
+
+{% endblock %}
