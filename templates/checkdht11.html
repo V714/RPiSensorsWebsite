@@ -6,6 +6,8 @@
     let refreshing=false;
 	let temp_lat = 0;
 	let humi_lat = 0;
+    let temp = '???';
+    let hum = '???';
     
     function change(){
         if(refreshing){
@@ -44,20 +46,22 @@
 			else{temp_lat=0;}
 
 			if(temp_lat>0){
-				document.getElementById('temperature').innerHTML=values[0]+' ('+(temp_lat*5)+'sec ago)';
+				document.getElementById('temperature').innerHTML=temp+'C ('+(temp_lat*5)+'sec ago)';
 			}
 			else{
-				document.getElementById('temperature').innerHTML=values[0];
+				document.getElementById('temperature').innerHTML=values[0]+'C';
+                temp=values[0];
 			}
 
 			if(values[1] == 'None'){humi_lat=humi_lat+1;}
 			else{humi_lat=0;}
 
 			if(humi_lat>0){
-				document.getElementById('humidity').innerHTML=values[1]+' ('+(humi_lat*5)+'sec ago)';
+				document.getElementById('humidity').innerHTML=hum+'% ('+(humi_lat*5)+'sec ago)';
 			}
 			else{
-				document.getElementById('humidity').innerHTML=values[1];
+				document.getElementById('humidity').innerHTML=values[1]+'%';
+                hum=values[1];
 			}
                     document.getElementById('name').innerHTML=data.name
                 }
@@ -83,8 +87,8 @@
 <button class="info" id="info" onclick="change();">Turn On</button>
 <div id="device_name"></div>
 <div id="state">
-    <div class="dht11value">Temperature: <div id="temperature">???</div>C</div>
-    <div class="dht11value">Humidity: <div id="humidity">???</div>%</div>
+    <div class="dht11value">Temperature: <div id="temperature">???</div></div>
+    <div class="dht11value">Humidity: <div id="humidity">???</div></div>
 
 </div>
 

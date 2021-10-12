@@ -355,6 +355,14 @@ table{
     transition: 0.2s all ease-in-out;
 }
 
+.dht11value{
+    font-size: 18px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+}
+
 
 @keyframes gradient {
 	0% {

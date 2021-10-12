@@ -29,9 +29,6 @@ cors = CORS(app)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-def get_variable():
-    variable="aaaa"
-    return variable
 
 @app.route('/')
 def index():
@@ -107,8 +104,10 @@ def device(id):
     obj = {}
     device = RPiSensor.query.get_or_404(id)
     if device.device_type == 'dht11':
-        
-        dht11 = DHT11(device.pin)
+        try:
+            dht11 = DHT11(device.pin)
+        except:
+            pass
         temp_val = dht11.temperature()
         humi_val = dht11.humidity()
         device.values = str(temp_val)+','+str(humi_val)
@@ -133,9 +132,11 @@ def set(id):
         green_value = data['green']
         blue_value = data['blue']
         device.values = red_value+','+green_value+','+blue_value
-        diode = RPiRGBDiode(device.pin1,device.pin2,device.pin3)
+        try:
+            diode = RPiRGBDiode(device.pin1,device.pin2,device.pin3)
+        except:
+            pass
         diode.setColor(device.values)
-        del diode
         try:
             db.session.commit()
             return "Correct!"
@@ -153,5 +154,3 @@ def devices():
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
 
-
-    
