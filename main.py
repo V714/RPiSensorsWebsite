@@ -114,14 +114,13 @@ def device(id):
         device.values = str(temp_val)+','+str(humi_val)
         try:
             db.session.commit()
-            return "Correct!"
         except:
             return 'Error ID: '+id+' - failure.'
         
         del dht11
         
     obj['name'] = device.name
-    obj['values'] = device.values
+    obj['values'] = str(device.values)
     obj['active'] = device.active
     return jsonify(obj)
 

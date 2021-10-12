@@ -12,10 +12,8 @@ class RPiRGBDiode:
         GPIO.setup(red,GPIO.OUT)
         GPIO.setup(blue,GPIO.OUT)
         GPIO.setup(green,GPIO.OUT)
-        print("INTING")
 
     def setColor(self,values='false,false,false'):
-        print("SETCOLOR"+values)
         values = values.split(',')
         if values[0]=='true':
             GPIO.output(self.red,GPIO.LOW)

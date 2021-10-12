@@ -4,6 +4,8 @@
 {% block body %}
 <script>
     let refreshing=false;
+	let temp_lat = 0;
+	let humi_lat = 0;
     
     function change(){
         if(refreshing){
@@ -21,7 +23,7 @@
     }
 
     function start_refreshing(){
-        refresh = window.setInterval(refresh300, 1000);
+        refresh = window.setInterval(refresh300, 5000);
     }
     function refresh300(){
         let this_id = {{id}}
@@ -36,11 +38,27 @@
                 return response.json()
             })
             .then(data => {
-                console.log(data)
                 if(data.active){
                     let values = data.values.split(',')
-                    document.getElementById('temparature').innerHTML=values[0]
-                    document.getElementById('humidity').innerHTML=values[1]
+			if(values[0] == 'None'){temp_lat=temp_lat+1;}
+			else{temp_lat=0;}
+
+			if(temp_lat>0){
+				document.getElementById('temperature').innerHTML=values[0]+' ('+(temp_lat*5)+'sec ago)';
+			}
+			else{
+				document.getElementById('temperature').innerHTML=values[0];
+			}
+
+			if(values[1] == 'None'){humi_lat=humi_lat+1;}
+			else{humi_lat=0;}
+
+			if(humi_lat>0){
+				document.getElementById('humidity').innerHTML=values[1]+' ('+(humi_lat*5)+'sec ago)';
+			}
+			else{
+				document.getElementById('humidity').innerHTML=values[1];
+			}
                     document.getElementById('name').innerHTML=data.name
                 }
                 else{
@@ -65,8 +83,8 @@
 <button class="info" id="info" onclick="change();">Turn On</button>
 <div id="device_name"></div>
 <div id="state">
-    <div class="dht11value">Temperature: <div id="temperature">???</div></div>
-    <div class="dht11value">Humidity: <div id="humidity">???</div></div>
+    <div class="dht11value">Temperature: <div id="temperature">???</div>C</div>
+    <div class="dht11value">Humidity: <div id="humidity">???</div>%</div>
 
 </div>
 
