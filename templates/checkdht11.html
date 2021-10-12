@@ -25,7 +25,7 @@
     }
 
     function start_refreshing(){
-        refresh = window.setInterval(refresh300, 5000);
+        refresh = window.setInterval(refresh300, 15000);
     }
     function refresh300(){
         let this_id = {{id}}
@@ -46,7 +46,7 @@
 			else{temp_lat=0;}
 
 			if(temp_lat>0){
-				document.getElementById('temperature').innerHTML=temp+'C ('+(temp_lat*5)+'sec ago)';
+				document.getElementById('temperature').innerHTML=temp+'C ('+(temp_lat*15)+'sec ago)';
 			}
 			else{
 				document.getElementById('temperature').innerHTML=values[0]+'C';
@@ -57,7 +57,7 @@
 			else{humi_lat=0;}
 
 			if(humi_lat>0){
-				document.getElementById('humidity').innerHTML=hum+'% ('+(humi_lat*5)+'sec ago)';
+				document.getElementById('humidity').innerHTML=hum+'% ('+(humi_lat*15)+'sec ago)';
 			}
 			else{
 				document.getElementById('humidity').innerHTML=values[1]+'%';
