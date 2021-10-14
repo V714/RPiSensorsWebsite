@@ -65,7 +65,7 @@ def add():
             if request.form['output'] == 'on':
                 sensor_output=True
         except:
-            pass
+            print("Disregarding active/output from /add form.")
         new_sensor = {}
         if device_type == 'rgbdiode':
             
@@ -107,7 +107,7 @@ def device(id):
         try:
             dht11 = DHT11(device.pin)
         except:
-            pass
+            print("Could not create new object (DHT11 from /device/)")
         temp_val = dht11.temperature()
         humi_val = dht11.humidity()
         device.values = str(temp_val)+','+str(humi_val)
@@ -135,7 +135,7 @@ def set(id):
         try:
             diode = RPiRGBDiode(device.pin1,device.pin2,device.pin3)
         except:
-            pass
+            print("Could not create new object (RPiRGBDiode from /set/)")
         diode.setColor(device.values)
         try:
             db.session.commit()
