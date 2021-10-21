@@ -2,7 +2,7 @@
 
 
 {% block body %}
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.esm.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
 <script>
     let refreshing=false;
 	let temp_lat = 0;
@@ -24,12 +24,16 @@
             document.getElementById('info').classList.add("active");
         }
     } */
-    document.addEventListener('DOMContentLoaded', () => {
-        let socket = io.connect('http://192.168.1.130:5000');
-    socket.on('connect', function() { socket.send('Connected');})
-    socket.on('dht_data', function(dht_data){
+
+	let socket = io.connect('http://192.168.1.130:5000');
+	let dht_data = io('http://192.168.1.130:5000/dht');
+   
+	$(document).ready(()=>{
+	refresh300();
+	start_refreshing();
+	dht_data.on('dht_data', function(data){
         if(data.active){
-            let values = dht_data.values.split(',')
+            let values = data.values.split(',')
 			if(values[0] == 'None'){temp_lat=temp_lat+1;}
 			else{temp_lat=0;}
 
@@ -60,13 +64,13 @@
             document.getElementById('info').remove();
         }
             
-    })
-    }) 
+    })})
+
     function start_refreshing(){
         refresh = window.setInterval(refresh300, 15000);
     }
     function refresh300(){
-        socket.emit('dht_data', 'ask')
+	    dht_data.emit("dht_data", {{id}})
                 };
             
 
