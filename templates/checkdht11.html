@@ -2,6 +2,7 @@
 
 
 {% block body %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.esm.min.js"></script> 
 <script>
     let refreshing=false;
 	let temp_lat = 0;
@@ -9,7 +10,7 @@
     let temp = '???';
     let hum = '???';
     
-    function change(){
+    /* function change(){
         if(refreshing){
             refreshing=false;
             clearInterval(refresh)
@@ -22,26 +23,13 @@
             document.getElementById('info').innerHTML="Turn Off";
             document.getElementById('info').classList.add("active");
         }
-    }
-
-    function start_refreshing(){
-        refresh = window.setInterval(refresh300, 15000);
-    }
-    function refresh300(){
-        let this_id = {{id}}
-        fetch(`http://192.168.1.130:5000/device/${this_id}`)
-            .then(function(response){
-                if(!response.ok){
-                    document.getElementById('state').innerHTML="NO DEVICE"
-                    document.getElementById('state').style.color="#a00"
-                    document.getElementById('title_scan').innerHTML=""
-                    document.getElementById('info').remove();
-                }
-                return response.json()
-            })
-            .then(data => {
-                if(data.active){
-                    let values = data.values.split(',')
+    } */
+    document.addEventListener('DOMContentLoaded', () => {
+        let socket = io.connect('http://192.168.1.130:5000');
+    socket.on('connect', function() { socket.send('Connected');})
+    socket.on('dht_data', function(dht_data){
+        if(data.active){
+            let values = dht_data.values.split(',')
 			if(values[0] == 'None'){temp_lat=temp_lat+1;}
 			else{temp_lat=0;}
 
@@ -63,22 +51,24 @@
 				document.getElementById('humidity').innerHTML=values[1]+'%';
                 hum=values[1];
 			}
-                    document.getElementById('name').innerHTML=data.name
+                    document.getElementById('name').innerHTML=dht_data.name
                 }
-                else{
-                document.getElementById('state').innerHTML="DEVICE NOT ACTIVE"
-                document.getElementById('state').style.color="#a00"
-                document.getElementById('title_scan').innerHTML=""
-                document.getElementById('info').remove();
-                }
-            })
-            .catch(error => {
-                console.log(error)
-                });
+        else{
+            document.getElementById('state').innerHTML="DEVICE NOT ACTIVE"
+            document.getElementById('state').style.color="#a00"
+            document.getElementById('title_scan').innerHTML=""
+            document.getElementById('info').remove();
+        }
             
+    })
+    }) 
+    function start_refreshing(){
+        refresh = window.setInterval(refresh300, 15000);
     }
-
-    refresh300();
+    function refresh300(){
+        socket.emit('dht_data', 'ask')
+                };
+            
 
 
 

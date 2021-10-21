@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, jsonify, request, redirect
 from flask.wrappers import Request
+from flask_socketio import SocketIO, emit
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -10,6 +11,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+socketio = SocketIO(app)
 
 class RPiSensor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -99,6 +101,28 @@ def add():
     else:
         return render_template("add.html")
 
+@socketio.on('dht_data')
+def handleDHTDataSocker():
+    obj = {}
+    device = RPiSensor.query.get_or_404(id)
+    try:
+        dht11 = DHT11(device.pin)
+    except:
+        print("Could not create new object (DHT11 from /device/)")
+
+    temp_val = dht11.temperature()
+    humi_val = dht11.humidity()
+    device.values = str(temp_val)+','+str(humi_val)
+    try:
+        db.session.commit()
+    except:
+        return 'Error ID: '+id+' - failure.'
+        
+    obj['name'] = device.name
+    obj['values'] = str(device.values)
+    obj['active'] = device.active
+    emit(jsonify(obj))
+
 @app.route('/device/<int:id>')
 def device(id):
     obj = {}
@@ -153,4 +177,5 @@ def devices():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app)
 
