@@ -87,11 +87,10 @@ h6{
     margin-top: -10%;
     display: flex;
     flex-direction: column;
-    font-size: 24px;
+    font-size: 48px;
     justify-content: flex-start;
     align-items: center;
     padding: 40px;
-    width: 20%;
     min-width: 300px;
     min-height: 400px;
     border-radius: 30px;
@@ -361,6 +360,7 @@ table{
     flex-direction: row;
     justify-content: flex-start;
     flex-wrap: nowrap;
+    margin-top: 20px;
 }
 
 
@@ -374,4 +374,22 @@ table{
 	100% {
 		background-position: 0% 50%;
 	}
+}
+
+@media screen and (max-width:800px) {
+    .main{width: 95vw;}
+}
+
+@media screen and (max-width:420px) {
+    .main{width: 95vw; font-size: 96px;margin-top: -50%;}
+    #rgb{flex-direction: column; display: flex;margin-bottom: 20px;}
+    .rgb_button{margin-bottom: 40px;}
+    #r_button{border: 3px solid #f00;}
+    #g_button{border: 3px solid #0f0;}
+    #b_button{border: 3px solid #00f;}
+    .dht11value{font-size: 48px;}
+    #log{font-size:96px;}
+    .add-new-div{width: 200px;height: 200px;}
+    .add-new{width: 200px;height: 200px; font-size: 120px;}   
+    .add-new:hover{height: 170px;width: 170px;font-size: 100px;}
 }
