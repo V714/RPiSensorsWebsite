@@ -3,7 +3,7 @@ This script runs web server and allow you to control devices connected to Raspbe
 Simply run by command
 > python3 main.py
 
-Web app opens on your local IP and port 5000, you can see the address on the console aswell.
+Web app opens on your local IP and port 5000, you can see the address on the terminal aswell.
 
 To add RGB Diode ( __common cathode__ ) press **+** in yellow circle, select RGB Diode from list and type in numbers of GPIOs (__BCM numbering - not BOARD __) for specific colors.
 
