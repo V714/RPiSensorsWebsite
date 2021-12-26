@@ -1,5 +1,12 @@
 This script runs web server and allow you to control devices connected to Raspberry Pi through any device connected to the same local network.
 
+Modules you need to install: flask, Adafruit_DHT, RPi.GPIO
+by using:
+> pip3 install **name_of_module**
+
+because I forgot about requirements.txt for now :)
+<br /><br /><br />
+
 Simply run by command
 > python3 main.py
 
